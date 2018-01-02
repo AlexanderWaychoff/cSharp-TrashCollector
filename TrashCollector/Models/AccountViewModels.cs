@@ -79,6 +79,14 @@ namespace TrashCollector.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        //get user first name, last name, address and phone number on sign-up
+
+        //[Required]
+        //[StringLength(100, ErrorMessage = "You need to enter letter characters for your Name.")]
+        //[DataType(DataType.Name)]
+
+        //User table needs all info + Temporary day pickup, permanent day pickup, money owed, vacation tracker
     }
 
     public class ResetPasswordViewModel
