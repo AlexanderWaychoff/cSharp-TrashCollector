@@ -21,6 +21,6 @@ namespace TrashCollector.Models
         public int RequestedPickUpDay { get; set; } //FK
         public int ScheduledPickUpDay { get; set; } //FK
         public float MonthlyCharge { get; set; }
-
+        public bool IsAdmin { get; set; }
     }
 }
