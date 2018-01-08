@@ -22,5 +22,10 @@ namespace TrashCollector.Models
         public int ScheduledPickUpDay { get; set; } //FK
         public float MonthlyCharge { get; set; }
         public bool IsAdmin { get; set; }
+        public Customer()
+        {
+            this.IsOnVacation = false;
+            this.IsAdmin = false;
+        }
     }
 }
