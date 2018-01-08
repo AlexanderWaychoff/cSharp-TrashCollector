@@ -17,7 +17,7 @@ namespace TrashCollector.Models
         public int StateAbbreviation { get; set; }   //FK
         public int ZipCode { get; set; }    //FK
         public string Email { get; set; }
-        public int IsOnVacation { get; set; }  //FK
+        public bool IsOnVacation { get; set; }  
         public int RequestedPickUpDay { get; set; } //FK
         public int ScheduledPickUpDay { get; set; } //FK
         public float MonthlyCharge { get; set; }
