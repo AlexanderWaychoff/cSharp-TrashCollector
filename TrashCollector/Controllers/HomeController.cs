@@ -25,7 +25,7 @@ namespace TrashCollector.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
-            return View();
+            return RedirectToAction("Index", "Customer");
         }
     }
 }

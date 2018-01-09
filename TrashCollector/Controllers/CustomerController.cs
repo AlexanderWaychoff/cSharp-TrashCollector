@@ -55,9 +55,9 @@ namespace TrashCollector.Controllers
             ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
             Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
-            if(customer.AccountID == user.Id)
+            if(customer != null && customer.AccountID == user.Id)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", "Customer");
             }
 
             return View();
@@ -116,7 +116,7 @@ namespace TrashCollector.Controllers
             {
                 db.Entry(customer).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             return View(customer);
         }
@@ -144,7 +144,7 @@ namespace TrashCollector.Controllers
             Customer customer = db.Customer.Find(id);
             db.Customer.Remove(customer);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult ChangeStatus()
@@ -203,7 +203,7 @@ namespace TrashCollector.Controllers
             {
                 db.Entry(customer).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             return View(customer);
         }
