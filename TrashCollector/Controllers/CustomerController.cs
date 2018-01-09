@@ -17,11 +17,6 @@ namespace TrashCollector.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            //var joinTables = from o in db.Customer
-            //                 join o2 in db.City on o.CityID 
-            //                 equals o2.CityID where o.CityID.Equals(o2.CityID)
-            //                 select new Customer { Breweries = o, BreweryData = o2 };
-            //db.Customer.where
             return View(db.Customer.ToList());
         }
 
@@ -43,10 +38,6 @@ namespace TrashCollector.Controllers
         // GET: Customer/Create
         public ActionResult Create()
         {
-            //.Includes
-            ViewBag.CityID = new SelectList(db.City, "CityID", "Name");
-            ViewBag.StateAbbreviatedID = new SelectList(db.StateAbbreviated, "StateAbbreviatedID", "TwoLetterAbbreviation");
-            ViewBag.ZipCodeID = new SelectList(db.ZipCode, "ZipCodeID", "ZipCodeID");
             return View();
         }
 
@@ -55,7 +46,7 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviation,ZipCode,Email,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay")] Customer customer)
+        public ActionResult Create([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +78,7 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviation,ZipCode,Email,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge")] Customer customer)
+        public ActionResult Edit([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -122,6 +113,11 @@ namespace TrashCollector.Controllers
             db.Customer.Remove(customer);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult SingleWeekChange()
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)

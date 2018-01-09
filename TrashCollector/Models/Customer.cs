@@ -7,12 +7,12 @@ using System.Web;
 
 namespace TrashCollector.Models
 {
+    public enum Weekday
+    {
+        Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+    }
     public class Customer
     {
-        public enum Weekday
-        {
-            Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
-        }
 
 
         [Key]
@@ -21,28 +21,26 @@ namespace TrashCollector.Models
         public string LastName { get; set; }
         public string StreetAddress { get; set; }
 
-        public int CityID { get; set; }    //FK
-        [ForeignKey("CityID")]
-        public City City { get; set; }
 
-        public int StateAbbreviatedID { get; set; }   //FK
-        [ForeignKey("StateAbbreviationID")]
-        public StateAbbreviated StateAbbreviated { get; set; }
+        public string City { get; set; }
 
-        public int ZipCodeID { get; set; }    //FK
-        [ForeignKey("ZipCodeID")]
-        public ZipCode ZipCode { get; set; }
 
-        public string Email { get; set; }
+        public string StateAbbreviated { get; set; }
+
+
+        public int ZipCode { get; set; }
+
         public bool IsOnVacation { get; set; }  
-        public Weekday? RequestedPickUpDay { get; set; } //FK
-        public Weekday? ScheduledPickUpDay { get; set; } //FK
+        public Weekday? RequestedPickUpDay { get; set; }
+        public Weekday? ScheduledPickUpDay { get; set; }
         public float? MonthlyCharge { get; set; }
         public bool IsAdmin { get; set; }
+        public int AccountID { get; set; }
         public Customer()
         {
             this.IsOnVacation = false;
             this.IsAdmin = false;
+            this.AccountID = CustomerID;
         }
     }
 }

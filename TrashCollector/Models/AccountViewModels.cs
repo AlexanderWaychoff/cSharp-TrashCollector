@@ -80,36 +80,6 @@ namespace TrashCollector.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "Street Address")]
-        public string StreetAddress { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "City")]
-        public string City { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "State")]
-        [StringLength(2, ErrorMessage = "You need to enter the two letter abbreviation for the state you live in.")]
-        public string StateAbbreviation { get; set; }
-
-        [Required]
-        [DataType(DataType.PostalCode)]
-        [Display(Name = "Zip Code")]
-        public string ZipCode { get; set; }
         //get user first name, last name, address and phone number on sign-up
 
         //[Required]

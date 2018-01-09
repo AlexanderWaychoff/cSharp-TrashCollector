@@ -30,9 +30,6 @@
             @Html.DisplayNameFor(model => model.ZipCode)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.IsOnVacation)
         </th>
         <th>
@@ -43,6 +40,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.MonthlyCharge)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAdmin)
         </th>
         <th></th>
     </tr>
@@ -68,9 +68,6 @@
             @Html.DisplayFor(modelItem => item.ZipCode)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.IsOnVacation)
         </td>
         <td>
@@ -81,6 +78,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.MonthlyCharge)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAdmin)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.CustomerID }) |
