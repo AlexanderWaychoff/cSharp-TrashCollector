@@ -10,22 +10,18 @@ using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Customer
+        // GET: Customers
         public ActionResult Index()
         {
-            //var joinTables = from o in db.Customer
-            //                 join o2 in db.City on o.CityID 
-            //                 equals o2.CityID where o.CityID.Equals(o2.CityID)
-            //                 select new Customer { Breweries = o, BreweryData = o2 };
-            //db.Customer.where
-            return View(db.Customer.ToList());
+            var customer = db.Customer.Include(c => c.City).Include(c => c.StateAbbreviation).Include(c => c.Zipcode);
+            return View(customer.ToList());
         }
 
-        // GET: Customer/Details/5
+        // GET: Customers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -40,22 +36,21 @@ namespace TrashCollector.Controllers
             return View(customer);
         }
 
-        // GET: Customer/Create
+        // GET: Customers/Create
         public ActionResult Create()
         {
-            //.Includes
             ViewBag.CityID = new SelectList(db.City, "CityID", "Name");
             ViewBag.StateAbbreviatedID = new SelectList(db.StateAbbreviated, "StateAbbreviatedID", "TwoLetterAbbreviation");
             ViewBag.ZipCodeID = new SelectList(db.ZipCode, "ZipCodeID", "ZipCodeID");
             return View();
         }
 
-        // POST: Customer/Create
+        // POST: Customers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviation,ZipCode,Email,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay")] Customer customer)
+        public ActionResult Create([Bind(Include = "CustomerId,FirstName,LastName,StreetAddress,CityID,StateAbbreviatedID,ZipCodeID,Email,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -64,10 +59,13 @@ namespace TrashCollector.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.CityID = new SelectList(db.City, "CityID", "Name", customer.CityID);
+            ViewBag.StateAbbreviatedID = new SelectList(db.StateAbbreviated, "StateAbbreviatedID", "TwoLetterAbbreviation", customer.StateAbbreviatedID);
+            ViewBag.ZipCodeID = new SelectList(db.ZipCode, "ZipCodeID", "ZipCodeID", customer.ZipCodeID);
             return View(customer);
         }
 
-        // GET: Customer/Edit/5
+        // GET: Customers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -79,15 +77,18 @@ namespace TrashCollector.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.CityID = new SelectList(db.City, "CityID", "Name", customer.CityID);
+            ViewBag.StateAbbreviatedID = new SelectList(db.StateAbbreviated, "StateAbbreviatedID", "TwoLetterAbbreviation", customer.StateAbbreviatedID);
+            ViewBag.ZipCodeID = new SelectList(db.ZipCode, "ZipCodeID", "ZipCodeID", customer.ZipCodeID);
             return View(customer);
         }
 
-        // POST: Customer/Edit/5
+        // POST: Customers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviation,ZipCode,Email,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge")] Customer customer)
+        public ActionResult Edit([Bind(Include = "CustomerId,FirstName,LastName,StreetAddress,CityID,StateAbbreviatedID,ZipCodeID,Email,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -95,10 +96,13 @@ namespace TrashCollector.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.CityID = new SelectList(db.City, "CityID", "Name", customer.CityID);
+            ViewBag.StateAbbreviatedID = new SelectList(db.StateAbbreviated, "StateAbbreviatedID", "TwoLetterAbbreviation", customer.StateAbbreviatedID);
+            ViewBag.ZipCodeID = new SelectList(db.ZipCode, "ZipCodeID", "ZipCodeID", customer.ZipCodeID);
             return View(customer);
         }
 
-        // GET: Customer/Delete/5
+        // GET: Customers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -113,7 +117,7 @@ namespace TrashCollector.Controllers
             return View(customer);
         }
 
-        // POST: Customer/Delete/5
+        // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
