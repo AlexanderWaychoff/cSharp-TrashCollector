@@ -60,7 +60,9 @@ namespace TrashCollector.Migrations
             var customers = new List<Customer>
             {
                 new Customer { FirstName = "Alex", LastName = "Waychoff", StreetAddress = "901 s 72nd st", City = "West Allis", StateAbbreviated = "WI", ZipCode = 53214, IsOnVacation = false, RequestedPickUpDay = Weekday.Thursday, ScheduledPickUpDay = Weekday.Thursday, MonthlyCharge = 30, IsAdmin = true},
-                new Customer { FirstName = "Bob", LastName = "Greene", StreetAddress = "15447 W Coffee Rd", City = "New Berlin", StateAbbreviated = "WI", ZipCode = 53151, IsOnVacation = false, RequestedPickUpDay = Weekday.Monday, ScheduledPickUpDay = Weekday.Friday, MonthlyCharge = 30, IsAdmin = false}
+                new Customer { FirstName = "Bob", LastName = "Greene", StreetAddress = "14347 W Coffee Rd", City = "New Berlin", StateAbbreviated = "WI", ZipCode = 53151, IsOnVacation = false, RequestedPickUpDay = Weekday.Monday, ScheduledPickUpDay = Weekday.Friday, MonthlyCharge = 30, IsAdmin = false},
+                new Customer { FirstName = "Blob", LastName = "Spleen", StreetAddress = "12347 W Coffee Rd", City = "New Berlin", StateAbbreviated = "WI", ZipCode = 53151, IsOnVacation = false, RequestedPickUpDay = Weekday.Tuesday, ScheduledPickUpDay = Weekday.Wednesday, MonthlyCharge = 40, IsAdmin = false},
+                new Customer { FirstName = "Wasabobi", LastName = "Macaroni", StreetAddress = "16147 W Coffee Rd", City = "New Berlin", StateAbbreviated = "WI", ZipCode = 53151, IsOnVacation = true, RequestedPickUpDay = Weekday.Saturday, ScheduledPickUpDay = Weekday.Saturday, MonthlyCharge = 45, IsAdmin = false}
 
             };
             customers.ForEach(s => context.Customer.AddOrUpdate(p => p.LastName, s));

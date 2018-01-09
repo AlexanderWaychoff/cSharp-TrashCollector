@@ -35,12 +35,13 @@ namespace TrashCollector.Models
         public Weekday? ScheduledPickUpDay { get; set; }
         public float? MonthlyCharge { get; set; }
         public bool IsAdmin { get; set; }
-        public int AccountID { get; set; }
+        public string AccountID { get; set; }
+        public DateTime? DropOffDate { get; set; }
         public Customer()
         {
             this.IsOnVacation = false;
             this.IsAdmin = false;
-            this.AccountID = CustomerID;
+            this.AccountID = "";
         }
     }
 }

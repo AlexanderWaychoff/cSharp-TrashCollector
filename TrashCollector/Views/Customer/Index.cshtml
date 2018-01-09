@@ -9,6 +9,13 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+@using (Html.BeginForm())
+{
+    <p>
+        Filter by Zip Code: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -85,7 +92,7 @@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.CustomerID }) |
             @Html.ActionLink("Details", "Details", new { id=item.CustomerID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.CustomerID })
+            <!--@Html.ActionLink("Delete", "Delete", new { id=item.CustomerID })-->
         </td>
     </tr>
 }

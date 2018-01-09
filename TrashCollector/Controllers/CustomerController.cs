@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -6,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
@@ -15,8 +18,19 @@ namespace TrashCollector.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Customer
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                int searchZipCode = Convert.ToInt32(searchString);
+                var customers = db.Customer.Where(s => s.ZipCode.Equals(searchZipCode)).ToList();
+                List<Customer> filteredCustomers = new List<Customer>();
+                foreach (var a in customers)
+                {
+                    filteredCustomers.Add(a);
+                }
+                return View(filteredCustomers);
+            }
             return View(db.Customer.ToList());
         }
 
@@ -38,6 +52,14 @@ namespace TrashCollector.Controllers
         // GET: Customer/Create
         public ActionResult Create()
         {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+            if(customer.AccountID == user.Id)
+            {
+                return RedirectToAction("Index");
+            }
+
             return View();
         }
 
@@ -48,8 +70,10 @@ namespace TrashCollector.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
         {
-            if (ModelState.IsValid)
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            if (ModelState.IsValid && customer.AccountID != user.Id)
             {
+                customer.AccountID = user.Id;
                 db.Customer.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -70,7 +94,14 @@ namespace TrashCollector.Controllers
             {
                 return HttpNotFound();
             }
-            return View(customer);
+            if (customer.IsAdmin)
+            {
+                return View(customer);
+            }
+            else
+            {
+                return SingleWeekChange(id);
+            }
         }
 
         // POST: Customer/Edit/5
@@ -80,6 +111,7 @@ namespace TrashCollector.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
         {
+
             if (ModelState.IsValid)
             {
                 db.Entry(customer).State = EntityState.Modified;
@@ -115,9 +147,65 @@ namespace TrashCollector.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult SingleWeekChange()
+        public ActionResult ChangeStatus()
         {
-            return View();
+            //var id = User.Identity.GetUserId();
+
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            var customerVar = from p in db.Customer
+                                where p.AccountID == user.Id
+                                select p;
+            Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customer);
+        }
+
+
+        public ActionResult SingleWeekChange(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Customer customer = db.Customer.Find(id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customer);
+        }
+
+        public ActionResult Vacation(int? id)
+        {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            var customerVar = from p in db.Customer
+                              where p.AccountID == user.Id
+                              select p;
+            Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customer);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Vacation([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
+        {
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(customer).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(customer);
         }
 
         protected override void Dispose(bool disposing)

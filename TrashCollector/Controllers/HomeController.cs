@@ -15,7 +15,7 @@ namespace TrashCollector.Controllers
 
         public ActionResult About()
         {
-
+            if(Request.IsAuthenticated)
             ViewBag.Message = "Your application description page.";
 
             return View();

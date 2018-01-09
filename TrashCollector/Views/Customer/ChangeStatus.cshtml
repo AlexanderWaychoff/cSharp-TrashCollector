@@ -1,0 +1,10 @@
+﻿@model TrashCollector.Models.Customer
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+        <th></th>
+        <td>
+                @Html.ActionLink("Go on Vacation", "Vacation", new { id = Model.CustomerID }) |
+                @Html.ActionLink("Change Single Week", "SingleWeekChange", "Customer") |
+        </td>
