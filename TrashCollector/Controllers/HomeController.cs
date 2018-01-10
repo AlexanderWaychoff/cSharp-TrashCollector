@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
@@ -10,6 +13,19 @@ namespace TrashCollector.Controllers
     {
         public ActionResult Index()
         {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            try
+            {
+                if (user.Email.Equals("cabbagefat@gmail.com")) //redirect to Contact page
+                {
+                    return RedirectToAction("Contact");
+                }
+            }
+            catch
+            {
+
+            }
+            //Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
             return View();
         }
 
@@ -23,9 +39,9 @@ namespace TrashCollector.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Home.";
 
-            return RedirectToAction("Index", "Customer");
+            return View();
         }
     }
 }

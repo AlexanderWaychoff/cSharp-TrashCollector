@@ -23,7 +23,13 @@ namespace TrashCollector.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 int searchZipCode = Convert.ToInt32(searchString);
-                var customers = db.Customer.Where(s => s.ZipCode.Equals(searchZipCode)).ToList();
+                string dayOfWeek = System.DateTime.Now.DayOfWeek.ToString();
+                var customers = db.Customer.Where(s => (s.ZipCode.Equals(searchZipCode)) 
+                && (s.RequestedPickUpDay == s.ScheduledPickUpDay ?
+                s.ScheduledPickUpDay.ToString().Equals(dayOfWeek) : s.RequestedPickUpDay.ToString().Equals(dayOfWeek))
+                && (s.IsOnVacation != true)
+                ).ToList();
+
                 List<Customer> filteredCustomers = new List<Customer>();
                 foreach (var a in customers)
                 {
@@ -77,7 +83,7 @@ namespace TrashCollector.Controllers
                 customer.MonthlyCharge = 15;
                 db.Customer.Add(customer);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(customer);
@@ -154,9 +160,6 @@ namespace TrashCollector.Controllers
 
             ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
-            var customerVar = from p in db.Customer
-                                where p.AccountID == user.Id
-                                select p;
             Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
             if (customer == null)
             {
