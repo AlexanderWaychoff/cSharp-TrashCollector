@@ -1,0 +1,20 @@
+﻿@model TrashCollector.Models.Customer
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <h4>Here's how much you owe for our service.</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MonthlyCharge)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MonthlyCharge)
+        </dd>
+
+    </dl>
+</div>

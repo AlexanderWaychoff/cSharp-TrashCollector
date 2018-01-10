@@ -1,17 +1,28 @@
 ﻿@{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Home Page";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">Welcome master.</p>
+</div>
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<div class="row">
+    <div class="col-md-4">
+        <h2>Submit your info here</h2>
+        <p>
+            See all customers here.  Search/filter by zip code and today to see who needs pickup where.
+        </p>
+        <p><a class="btn btn-default" @Html.ActionLink("Show Customers", "Index", "Customer")></a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Change your status</h2>
+        <p>Want to change your pickup day for this week or every week?  Or going on vacation?  Let us know here.</p>
+        <p><a class="btn btn-default" @Html.ActionLink("Change Pickup", "ChangeStatus", "Customer")></a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>Once you're signed up, you get to see how much we're charging you.</p>
+        <p><a class="btn btn-default" @Html.ActionLink("How much you owe", "MonthlyCharge", "Customer")></a></p>
+    </div>
+</div>

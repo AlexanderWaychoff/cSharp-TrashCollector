@@ -57,7 +57,7 @@ namespace TrashCollector.Controllers
             Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
             if(customer != null && customer.AccountID == user.Id)
             {
-                return RedirectToAction("Edit", "Customer");
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
@@ -74,6 +74,7 @@ namespace TrashCollector.Controllers
             if (ModelState.IsValid && customer.AccountID != user.Id)
             {
                 customer.AccountID = user.Id;
+                customer.MonthlyCharge = 15;
                 db.Customer.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -164,28 +165,12 @@ namespace TrashCollector.Controllers
             return View(customer);
         }
 
-
-        public ActionResult SingleWeekChange(int? id)
+        public ActionResult MonthlyCharge()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Customer customer = db.Customer.Find(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
-        }
+            //var id = User.Identity.GetUserId();
 
-        public ActionResult Vacation(int? id)
-        {
             ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
-            var customerVar = from p in db.Customer
-                              where p.AccountID == user.Id
-                              select p;
             Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
             if (customer == null)
             {
@@ -194,16 +179,96 @@ namespace TrashCollector.Controllers
             return View(customer);
         }
 
+        public ActionResult SingleWeekChange(int? id)
+        {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            try
+            {
+                Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+                if (customer == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(customer);
+            }
+            catch
+            {
+
+            }
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SingleWeekChange([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
+        {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            try
+            {
+                Customer baseCustomer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+
+                db.Customer
+                       .Where(f => f.CustomerID.Equals(customer.CustomerID))
+                       .ToList()
+                       .ForEach(f => f.RequestedPickUpDay = customer.RequestedPickUpDay);
+                db.SaveChanges();
+                db.Customer
+                       .Where(f => f.CustomerID.Equals(customer.CustomerID))
+                       .ToList()
+                       .ForEach(f => f.ScheduledPickUpDay = customer.ScheduledPickUpDay);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+
+            }
+            catch
+            {
+
+            }
+            return View(customer);
+        }
+
+        public ActionResult Vacation(int? id)
+        {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            try
+            {
+                Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+                if (customer == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(customer);
+            }
+            catch
+            {
+
+            }
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Vacation([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
         {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(customer).State = EntityState.Modified;
+                Customer baseCustomer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+
+                db.Customer
+                       .Where(f => f.CustomerID.Equals(customer.CustomerID))
+                       .ToList()
+                       .ForEach(f => f.IsOnVacation = customer.IsOnVacation);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
+                
+            }
+            catch
+            {
+
             }
             return View(customer);
         }
