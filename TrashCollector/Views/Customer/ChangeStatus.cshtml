@@ -3,8 +3,10 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<h4>You can change vacation status, request specific pick up this week, or change the day we're scheduled to pick up your trash.</h4>
         <th></th>
         <td>
                 @Html.ActionLink("Go on Vacation", "Vacation", new { id = Model.CustomerID }) |
-                @Html.ActionLink("Change Single Week", "SingleWeekChange", "Customer") |
+                @Html.ActionLink("Change This Week", "SingleWeekChange", "Customer") |
+            @Html.ActionLink("Change Schedule", "ScheduledChange", "Customer") |
         </td>

@@ -25,7 +25,7 @@ namespace TrashCollector.Controllers
                 int searchZipCode = Convert.ToInt32(searchString);
                 string dayOfWeek = System.DateTime.Now.DayOfWeek.ToString();
                 var customers = db.Customer.Where(s => (s.ZipCode.Equals(searchZipCode)) 
-                && (s.RequestedPickUpDay == s.ScheduledPickUpDay ?
+                && (s.RequestedPickUpDay == s.ScheduledPickUpDay || s.RequestedPickUpDay == null ?
                 s.ScheduledPickUpDay.ToString().Equals(dayOfWeek) : s.RequestedPickUpDay.ToString().Equals(dayOfWeek))
                 && (s.IsOnVacation != true)
                 ).ToList();
@@ -81,6 +81,7 @@ namespace TrashCollector.Controllers
             {
                 customer.AccountID = user.Id;
                 customer.MonthlyCharge = 15;
+                customer.ScheduledPickUpDay = Weekday.Wednesday;
                 db.Customer.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
@@ -216,6 +217,45 @@ namespace TrashCollector.Controllers
                        .ToList()
                        .ForEach(f => f.RequestedPickUpDay = customer.RequestedPickUpDay);
                 db.SaveChanges();
+
+                return RedirectToAction("Index", "Home");
+
+            }
+            catch
+            {
+
+            }
+            return View(customer);
+        }
+
+        public ActionResult ScheduledChange(int? id)
+        {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            try
+            {
+                Customer customer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
+                if (customer == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(customer);
+            }
+            catch
+            {
+
+            }
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ScheduledChange([Bind(Include = "CustomerID,FirstName,LastName,StreetAddress,City,StateAbbreviated,ZipCode,IsOnVacation,RequestedPickUpDay,ScheduledPickUpDay,MonthlyCharge,IsAdmin,AccountID")] Customer customer)
+        {
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            try
+            {
+                Customer baseCustomer = db.Customer.FirstOrDefault(p => p.AccountID == user.Id);
                 db.Customer
                        .Where(f => f.CustomerID.Equals(customer.CustomerID))
                        .ToList()

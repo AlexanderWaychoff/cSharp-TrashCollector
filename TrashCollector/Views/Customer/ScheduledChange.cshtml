@@ -4,18 +4,18 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Customer</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.CustomerID)
-        <h4>We can pick up your garbage on a specific day this week.  Which day would you like?</h4>
+        <h4>The day we're scheduled to pickup your garbage is displayed below.  If you'd prefer a different day, select it from the dropdown menu and we'll come then instead.</h4>
         <div class="form-group">
-            @Html.LabelFor(model => model.RequestedPickUpDay, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ScheduledPickUpDay, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.RequestedPickUpDay, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.RequestedPickUpDay, "", new { @class = "text-danger" })
+                @Html.EnumDropDownListFor(model => model.ScheduledPickUpDay, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ScheduledPickUpDay, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -34,3 +34,5 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+
